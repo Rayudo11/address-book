@@ -1,52 +1,38 @@
-import React, {Component} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Addresses from './Addresses'
 
 
 
+function App () {
+  const [arrayOfAddresses, setArrayOfAddresses] = useState([])
 
-class App extends Component{
-  constructor() {
-    super()
+  useEffect(()=>{
+    axios.get('https://randomuser.me/api?results=25').then((res) =>{
+      setArrayOfAddresses(res.data.results);
+    });
+    
+  }, [])
 
-    this.state = {
-      arrayOfAddresses: []
-    }
-  }
-
-  componentDidMount() {
-    axios.get('https://randomuser.me/api?results=25')
-    .then( res => {
-      const arrayOfAddresses = res.data
-      this.setState( arrayOfAddresses )
-    })
-  }
-
-  componentDidUpdate() {
-   console.log(this.state.results)
   
-  }
 
-    render() {
+   
       return (
       <div className="App">
        <header className="App-header">
-         {this.state.results.length === 0 ? (
-           <p>loading ...</p>):(
-            <ol>{this.state.results.map((address,index) => {
-              return(
-              <li key={index}>
-                {address.name}
-              </li>
-              )
-            })}
-              
-            </ol>
-           )
-         }
+         {arrayOfAddresses.length === 0 ? (
+           <p>loading ...</p>
+           ):(
+            <ol>
+              {arrayOfAddresses.map((address, index) =>{
+                return <Addresses  key={index} address={address}></Addresses>
+              })}
+               </ol>
+           )}
         </header>
         </div>
       );
-    }
+    
   
   
 }
